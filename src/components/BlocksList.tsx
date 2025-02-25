@@ -13,9 +13,11 @@ const BlocksList: FC<BlocksListProps> = (props) => {
 
     return (
         <div className='block-layout'>
-            {Array.from({ length: 9 }).map((_, index) => (
-                <Block key={index} onClick={() => null} color={colors[index]} />
-            ))}
+            {Array.from({ length: 9 }).map((_, index) => {
+                return (
+                    <Block key={index} onClick={() => null} color={colors[index]} id={index} />
+                )
+            })}
         </div>
     )
 }
