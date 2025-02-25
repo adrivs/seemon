@@ -1,15 +1,30 @@
 import { useState } from 'react'
 import './App.css'
 import BlocksList from './components/BlocksList'
+import findUniqueRandomNumber from './lib/findUniqueRandomNumber'
 
 // TODO Disable button when game starts
+// TODO Create a stop game button?
+
 
 const App = () => {
   const [listOfNumbers, setListOfNumbers] = useState<number[]>([])
 
   const handleStart = () => {
-    setListOfNumbers([2, 4, 6])
+    setListOfNumbers([])
+
+    const mockArray = Array.from(Array(3)) as number[];
+
+    mockArray.forEach((_, index, array) => {
+      const numberGenerated = findUniqueRandomNumber(array);
+      mockArray[index] = numberGenerated as number
+    })
+
+    setListOfNumbers(mockArray)
+
   }
+
+
 
   return (
     <main id='main-layout'>
