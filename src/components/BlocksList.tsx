@@ -7,6 +7,7 @@ interface BlocksListProps {
     onSetSelectedBlocks: Dispatch<SetStateAction<number[]>>
     selectedBlocks: number[];
     onSetGameStatus: Dispatch<SetStateAction<GameStatus>>
+    onHandleIncreaseLevel: () => void;
 }
 
 const BlocksList: FC<BlocksListProps> = (props) => {
@@ -16,23 +17,28 @@ const BlocksList: FC<BlocksListProps> = (props) => {
     const colors = ["red", "blue", "green", "magenta", "yellow", "pink", "orange", "purple", "white"]
 
     const handleClickBlock = (blockNumber: number) => {
-        const numbersToCheck = [...props.listOfNumbers]
-        props.onSetSelectedBlocks(prev => [...prev, blockNumber]);
+        const numbersToCheck = [...props.listOfNumbers];
 
-        const currentNumberOfItems = props.selectedBlocks.length;
+        const updatedSelectedBlocks = [...props.selectedBlocks, blockNumber];
+        props.onSetSelectedBlocks(updatedSelectedBlocks);
 
-        numbersToCheck.forEach((numberToCheck, index) => {
-            if (index === currentNumberOfItems) {
+        const currentNumberOfItems = updatedSelectedBlocks.length;
+
+        numbersToCheck.forEach((numberToCheck, index, array) => {
+            if (index === currentNumberOfItems - 1) {
                 const selectedNumberIsCorrect = numberToCheck === blockNumber;
+                const levelCompleted = currentNumberOfItems === array.length;
+
                 if (selectedNumberIsCorrect) {
-                    console.log("Correct")
+                    if (levelCompleted) {
+                        props.onHandleIncreaseLevel();
+                    }
                 } else {
-                    props.onSetGameStatus("failed")
+                    props.onSetGameStatus("failed");
                 }
             }
-
-        })
-    }
+        });
+    };
 
     return (
         <div className='block-layout'>

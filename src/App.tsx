@@ -11,15 +11,13 @@ const App = () => {
   const [listOfNumbers, setListOfNumbers] = useState<number[]>([])
   const [selectedBlocks, setSelectedBlocks] = useState<number[]>([])
   const [gameStatus, setGameStatus] = useState<GameStatus>("off")
-  // const [currentLevel, setCurrentLevel] = useState<number>(1)
+  const [currentLevel, setCurrentLevel] = useState<number>(0)
 
-
-  console.log("Game Status: ", gameStatus)
 
   const handleStart = () => {
     setGameStatus("running");
 
-    const arrayOfNumbers = getArrayWithNumbers(3)
+    const arrayOfNumbers = getArrayWithNumbers(3 + currentLevel)
 
     setListOfNumbers(arrayOfNumbers)
 
@@ -44,7 +42,17 @@ const App = () => {
   const handleRestart = () => {
     setListOfNumbers([]);
     setSelectedBlocks([]);
-    setGameStatus("off")
+    setCurrentLevel(0);
+    setGameStatus("off");
+  }
+
+  const handleIncreaseLevel = () => {
+    setTimeout(() => {
+      setCurrentLevel(prev => prev + 1);
+      setListOfNumbers([]);
+      setSelectedBlocks([]);
+      handleStart()
+    }, 5000)
   }
 
   return (
@@ -55,8 +63,15 @@ const App = () => {
         }}>
           SEEMON
         </h3>
+        <span>Current Level: {currentLevel + 1}</span>
       </div>
-      <BlocksList listOfNumbers={listOfNumbers} onSetSelectedBlocks={setSelectedBlocks} selectedBlocks={selectedBlocks} onSetGameStatus={setGameStatus} />
+      <BlocksList
+        listOfNumbers={listOfNumbers}
+        onSetSelectedBlocks={setSelectedBlocks}
+        selectedBlocks={selectedBlocks}
+        onSetGameStatus={setGameStatus}
+        onHandleIncreaseLevel={handleIncreaseLevel}
+      />
       <div id='buttons-layout'>
         <button onClick={handleStart} disabled={gameStatus !== "off"}>{gameStatus === "running" ? "Running" : "Start"}</button>
         <button onClick={handleRestart} disabled={gameStatus !== "failed"}>Restart</button>
