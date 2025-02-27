@@ -14,10 +14,10 @@ const App = () => {
   const [currentLevel, setCurrentLevel] = useState<number>(0)
 
 
-  const handleStart = () => {
+  const handleStart = (level: number) => {
     setGameStatus("running");
-
-    const arrayOfNumbers = getArrayWithNumbers(3 + currentLevel)
+    console.log("level", level)
+    const arrayOfNumbers = getArrayWithNumbers(3 + level)
 
     setListOfNumbers(arrayOfNumbers)
 
@@ -48,11 +48,14 @@ const App = () => {
 
   const handleIncreaseLevel = () => {
     setTimeout(() => {
-      setCurrentLevel(prev => prev + 1);
+      const level = currentLevel;
+      const levelUpdated = level + 1
+      setCurrentLevel(levelUpdated);
       setListOfNumbers([]);
       setSelectedBlocks([]);
-      handleStart()
-    }, 5000)
+
+      handleStart(levelUpdated)
+    }, 3000)
   }
 
   return (
@@ -73,7 +76,7 @@ const App = () => {
         onHandleIncreaseLevel={handleIncreaseLevel}
       />
       <div id='buttons-layout'>
-        <button onClick={handleStart} disabled={gameStatus !== "off"}>{gameStatus === "running" ? "Running" : "Start"}</button>
+        <button onClick={() => handleStart(currentLevel)} disabled={gameStatus !== "off"}>{gameStatus === "running" ? "Running" : "Start"}</button>
         <button onClick={handleRestart} disabled={gameStatus !== "failed"}>Restart</button>
       </div>
     </main>
