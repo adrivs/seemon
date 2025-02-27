@@ -7,11 +7,7 @@ interface BlockProps {
 }
 
 const Block: FC<BlockProps> = (props) => {
-
-
-
-    return <div className="block" style={{ backgroundColor: props.color }} id={`block-${props.id}`} />
+    return <div className="block" style={{ backgroundColor: props.color }} id={`block-${props.id}`} onClick={props.onClick} />
 }
-
 
 export default Block;

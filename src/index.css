@@ -96,3 +96,9 @@ button:focus-visible {
   flex-direction: column;
   gap: 24px;
 }
+
+#buttons-layout {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}

@@ -1,29 +1,29 @@
 import { useState } from 'react'
 import './App.css'
 import BlocksList from './components/BlocksList'
-import getRandomNumber from './lib/getRandomNumber'
 import generateBeep from './lib/generateBeep'
+import getArrayWithNumbers from './lib/getArrayWithNumbers'
 
-// TODO Disable button when game starts
-// TODO Create a stop game button?
-
-const HIGHEST_NUMBER_TO_RANDOMIZE = 9
+export type GameStatus = "off" | "running" | "failed"
 
 const App = () => {
+  // TODO Use context to handle all this states? -> Avoid passing multiple props?
   const [listOfNumbers, setListOfNumbers] = useState<number[]>([])
+  const [selectedBlocks, setSelectedBlocks] = useState<number[]>([])
+  const [gameStatus, setGameStatus] = useState<GameStatus>("off")
+  // const [currentLevel, setCurrentLevel] = useState<number>(1)
+
+
+  console.log("Game Status: ", gameStatus)
 
   const handleStart = () => {
-    const mockArray = Array.from(Array(3)) as number[];
+    setGameStatus("running");
 
-    mockArray.forEach((_, index) => {
-      const randomNumber = getRandomNumber(HIGHEST_NUMBER_TO_RANDOMIZE)
+    const arrayOfNumbers = getArrayWithNumbers(3)
 
-      mockArray[index] = randomNumber
-    })
+    setListOfNumbers(arrayOfNumbers)
 
-    setListOfNumbers(mockArray)
-
-    mockArray.forEach((number, index) => {
+    arrayOfNumbers.forEach((number, index) => {
       const blockId = `block-${number}`
       const element = document.getElementById(blockId) as HTMLElement
 
@@ -41,16 +41,25 @@ const App = () => {
     })
   }
 
-
+  const handleRestart = () => {
+    setListOfNumbers([]);
+    setSelectedBlocks([]);
+    setGameStatus("off")
+  }
 
   return (
     <main id='main-layout'>
       <div>
-        <h3>SEEMON</h3>
+        <h3 style={{
+          color: gameStatus !== "failed" ? "white" : "red"
+        }}>
+          SEEMON
+        </h3>
       </div>
-      <BlocksList listOfNumbers={listOfNumbers} />
-      <div>
-        <button onClick={handleStart}>Start</button>
+      <BlocksList listOfNumbers={listOfNumbers} onSetSelectedBlocks={setSelectedBlocks} selectedBlocks={selectedBlocks} onSetGameStatus={setGameStatus} />
+      <div id='buttons-layout'>
+        <button onClick={handleStart} disabled={gameStatus !== "off"}>{gameStatus === "running" ? "Running" : "Start"}</button>
+        <button onClick={handleRestart} disabled={gameStatus !== "failed"}>Restart</button>
       </div>
     </main>
   )
